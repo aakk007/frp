@@ -2,13 +2,12 @@
 frp一键端
 你可以将整个安装过程合并为一条命令，使用 && 连接多个步骤。这里是一键安装命令：
 
-bash
+# 执行安装命令
 sudo dnf install -y dos2unix && \
 sudo curl -L "https://raw.githubusercontent.com/aakk007/frp/main/install_frps_frpc.sh" -o /usr/local/install_frps_frpc.sh && \
 sudo dos2unix /usr/local/install_frps_frpc.sh && \
 sudo chmod +x /usr/local/install_frps_frpc.sh && \
 sudo /usr/local/install_frps_frpc.sh
-
 
 使用说明：
 复制命令：直接复制上述完整命令。
