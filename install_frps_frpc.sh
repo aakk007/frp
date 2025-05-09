@@ -2,7 +2,7 @@
 
 # 一体化FRP服务端/客户端管理脚本
 # 适用于CentOS Stream9系统
-# 版本：v1.2
+# 版本：v1.3
 
 stty erase ^? 2>/dev/null  # 兼容不同终端的退格键
 
@@ -37,7 +37,7 @@ init_directories() {
 show_main_menu() {
     clear
     echo -e "${BLUE}==================================================${RESET}"
-    echo -e "FRP 一体化管理脚本 v1.2"
+    echo -e "FRP 一体化管理脚本 v1.3"
     echo -e "${BLUE}==================================================${RESET}"
     echo "1) 安装/配置 FRP 服务端"
     echo "2) 安装/配置 FRP 客户端"
@@ -132,11 +132,24 @@ EOF
     fi
 }
 
-# 安装客户端
+# 安装客户端（已修复默认值问题）
 install_frpc() {
     echo -e "${BLUE}================ FRP 客户端配置 ================${RESET}"
-    read -e -p "服务器IP地址: " SERVER_IP
-    read -e -p "认证token (与服务端一致): " TOKEN
+    
+    # 强制要求输入必要参数
+    while true; do
+        read -e -p "服务器IP地址: " SERVER_IP
+        [ -n "${SERVER_IP}" ] && break
+        echo -e "${RED}错误：服务器IP地址不能为空！${RESET}"
+    done
+    
+    while true; do
+        read -e -p "认证token (与服务端一致): " TOKEN
+        [ -n "${TOKEN}" ] && break
+        echo -e "${RED}错误：认证token不能为空！${RESET}"
+    done
+    
+    # 带默认值的端口设置
     read -e -p "服务端口 (默认7000): " SERVER_PORT
     SERVER_PORT=${SERVER_PORT:-7000}
 
@@ -338,11 +351,13 @@ main() {
                 install_dependencies
                 prepare_install
                 install_frps
+                read -n 1 -s -r -p "按任意键返回主菜单..."
                 ;;
             2)
                 install_dependencies
                 prepare_install
                 install_frpc
+                read -n 1 -s -r -p "按任意键返回主菜单..."
                 ;;
             3)
                 manage_proxies
